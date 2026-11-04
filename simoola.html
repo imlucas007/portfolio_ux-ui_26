@@ -437,6 +437,20 @@ a[href$=".pdf"].btn:hover .ar,a[href$=".pdf"].btn:focus-visible .ar,a.mnav-cv:ho
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);z-index:70;transform:translate(-50%,20px);opacity:0;visibility:hidden;max-width:min(92vw,440px);background:var(--black);color:#fff;border-radius:16px;padding:1rem 1.2rem;font-size:.92rem;line-height:1.5;box-shadow:0 14px 34px rgba(13,13,15,.3);transition:opacity .25s,transform .25s,visibility .25s}
 .toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
 .toast a{color:var(--lilac)}
+
+.fc{position:fixed;left:0;top:0;z-index:2147483646;pointer-events:none;opacity:0;transition:opacity .15s;will-change:transform}
+html.has-fc .fc.on{opacity:1}
+html.has-fc, html.has-fc *{cursor:none!important}
+.fc svg{position:absolute;left:0;top:0;overflow:visible;transition:transform .12s ease,opacity .12s ease}
+.fc .fc-arrow{width:24px;height:24px;transform:translate(-3px,-3px)}
+.fc .fc-hand{width:24px;height:28px;transform:translate(-10px,-1px) scale(.6);opacity:0}
+.fc.click .fc-arrow{opacity:0;transform:translate(-3px,-3px) scale(.6)}
+.fc.click .fc-hand{opacity:1;transform:translate(-10px,-1px) scale(1)}
+.fc.down .fc-arrow{transform:translate(-3px,-3px) scale(.86)}
+.fc.down .fc-hand{transform:translate(-10px,-1px) scale(.88)}
+.fc-tag{position:absolute;left:16px;top:20px;white-space:nowrap;background:var(--lilac-ink);color:#fff;font:500 12px/1 var(--f-display);letter-spacing:.01em;padding:5px 8px 6px;border-radius:2px 8px 8px 8px;box-shadow:0 2px 8px rgba(13,13,15,.18);transition:transform .12s ease}
+.fc.click .fc-tag{transform:translate(4px,8px)}
+@media (hover:none),(pointer:coarse){.fc{display:none}}
 </style>
 </head>
 <body>
@@ -635,6 +649,33 @@ a[href$=".pdf"].btn:hover .ar,a[href$=".pdf"].btn:focus-visible .ar,a.mnav-cv:ho
     var sx = null; lb.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; }, { passive:true });
     lb.addEventListener('touchend', function(e){ if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1)); sx = null; });
   }
+  // ---- cursor estilo Figma ----
+  (function(){
+    if (!window.matchMedia || !matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    var c = document.createElement('div');
+    c.className = 'fc'; c.setAttribute('aria-hidden','true');
+    c.innerHTML = '<svg class="fc-arrow" viewBox="0 0 24 24"><path d="M3.5 2.8 20.5 9.3 12.6 12 9.6 20Z" fill="#4b3fb0" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>'
+      + '<svg class="fc-hand" viewBox="0 0 28 32"><defs><g id="fc-h"><rect x="9" y="1" width="4.4" height="18" rx="2.2"/><rect x="13" y="9.6" width="4.2" height="10" rx="2.1"/><rect x="17" y="10.8" width="4.2" height="9" rx="2.1"/><rect x="21" y="12.4" width="3.8" height="8" rx="1.9"/><rect x="9" y="15" width="15.8" height="10" rx="3"/><path d="M9.6 22H24.8V23.5C24.8 27 22.5 29.5 19.5 29.5H14.5C12.4 29.5 11 28.6 10 27Z"/><rect x="5.6" y="12.2" width="4" height="10.5" rx="2" transform="rotate(-38 9.4 21)"/></g></defs>'
+      + '<use href="#fc-h" fill="none" stroke="#0d0d0f" stroke-width="2.4" stroke-linejoin="round"/><use href="#fc-h" fill="#fff"/><path d="M13.2 13.2v5M17.2 14v4.6M21.1 15v3.8" stroke="#0d0d0f" stroke-width=".9" stroke-linecap="round" fill="none"/></svg>'
+      + '<span class="fc-tag">Você</span>';
+    document.body.appendChild(c);
+    document.documentElement.classList.add('has-fc');
+    var SEL = 'a,button,[role="button"],label,summary,select,.shot,.copy,input[type="submit"],input[type="button"]';
+    var x = -100, y = -100, raf = 0;
+    function paint(){ raf = 0; c.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)'; }
+    document.addEventListener('mousemove', function(e){
+      x = e.clientX; y = e.clientY;
+      if (!raf) raf = requestAnimationFrame(paint);
+      c.classList.add('on');
+      var t = e.target && e.target.closest ? e.target.closest(SEL) : null;
+      c.classList.toggle('click', !!(t && !t.disabled));
+    }, {passive:true});
+    document.addEventListener('mousedown', function(){ c.classList.add('down'); });
+    document.addEventListener('mouseup', function(){ c.classList.remove('down'); });
+    document.addEventListener('mouseleave', function(){ c.classList.remove('on'); });
+    document.documentElement.addEventListener('mouseleave', function(){ c.classList.remove('on'); });
+    window.addEventListener('blur', function(){ c.classList.remove('on','down'); });
+  })();
 })();
 </script>
 </body>
