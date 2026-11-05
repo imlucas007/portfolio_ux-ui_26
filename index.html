@@ -441,15 +441,15 @@ a[href$=".pdf"].btn:hover .ar,a[href$=".pdf"].btn:focus-visible .ar,a.mnav-cv:ho
 .fc{position:fixed;left:0;top:0;z-index:2147483646;pointer-events:none;opacity:0;transition:opacity .15s;will-change:transform}
 html.has-fc .fc.on{opacity:1}
 html.has-fc, html.has-fc *{cursor:none!important}
-.fc svg{position:absolute;left:0;top:0;overflow:visible;transition:transform .12s ease,opacity .12s ease}
-.fc .fc-arrow{width:24px;height:24px;transform:translate(-3px,-3px)}
-.fc .fc-hand{width:24px;height:28px;transform:translate(-10px,-1px) scale(.6);opacity:0}
-.fc.click .fc-arrow{opacity:0;transform:translate(-3px,-3px) scale(.6)}
-.fc.click .fc-hand{opacity:1;transform:translate(-10px,-1px) scale(1)}
-.fc.down .fc-arrow{transform:translate(-3px,-3px) scale(.86)}
-.fc.down .fc-hand{transform:translate(-10px,-1px) scale(.88)}
-.fc-tag{position:absolute;left:16px;top:20px;white-space:nowrap;background:var(--lilac-ink);color:#fff;font:500 12px/1 var(--f-display);letter-spacing:.01em;padding:5px 8px 6px;border-radius:2px 8px 8px 8px;box-shadow:0 2px 8px rgba(13,13,15,.18);transition:transform .12s ease}
-.fc.click .fc-tag{transform:translate(4px,8px)}
+.fc svg{position:absolute;left:0;top:0;width:24px;height:24px;overflow:visible;transform:translate(-3px,-3px);transition:transform .12s ease}
+.fc svg path{fill:var(--lilac-ink);transition:fill .15s ease}
+.fc.click svg path{fill:var(--ink)}
+.fc.down svg{transform:translate(-3px,-3px) scale(.86)}
+.fc-tag{position:absolute;left:16px;top:20px;white-space:nowrap;background:var(--lilac-ink);color:#fff;font:500 12px/1 var(--f-display);letter-spacing:.01em;padding:5px 8px 6px;border-radius:2px 8px 8px 8px;box-shadow:0 2px 8px rgba(13,13,15,.18);transition:background-color .15s ease}
+.fc-tag .t2{display:none}
+.fc.click .fc-tag{background:var(--ink);box-shadow:0 0 0 1.5px #fff,0 2px 8px rgba(13,13,15,.18)}
+.fc.click .fc-tag .t1{display:none}
+.fc.click .fc-tag .t2{display:inline}
 @media (hover:none),(pointer:coarse){.fc{display:none}}
 </style>
 </head>
@@ -767,10 +767,8 @@ html.has-fc, html.has-fc *{cursor:none!important}
     if (!window.matchMedia || !matchMedia('(hover:hover) and (pointer:fine)').matches) return;
     var c = document.createElement('div');
     c.className = 'fc'; c.setAttribute('aria-hidden','true');
-    c.innerHTML = '<svg class="fc-arrow" viewBox="0 0 24 24"><path d="M3.5 2.8 20.5 9.3 12.6 12 9.6 20Z" fill="#4b3fb0" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>'
-      + '<svg class="fc-hand" viewBox="0 0 28 32"><defs><g id="fc-h"><rect x="9" y="1" width="4.4" height="18" rx="2.2"/><rect x="13" y="9.6" width="4.2" height="10" rx="2.1"/><rect x="17" y="10.8" width="4.2" height="9" rx="2.1"/><rect x="21" y="12.4" width="3.8" height="8" rx="1.9"/><rect x="9" y="15" width="15.8" height="10" rx="3"/><path d="M9.6 22H24.8V23.5C24.8 27 22.5 29.5 19.5 29.5H14.5C12.4 29.5 11 28.6 10 27Z"/><rect x="5.6" y="12.2" width="4" height="10.5" rx="2" transform="rotate(-38 9.4 21)"/></g></defs>'
-      + '<use href="#fc-h" fill="none" stroke="#0d0d0f" stroke-width="2.4" stroke-linejoin="round"/><use href="#fc-h" fill="#fff"/><path d="M13.2 13.2v5M17.2 14v4.6M21.1 15v3.8" stroke="#0d0d0f" stroke-width=".9" stroke-linecap="round" fill="none"/></svg>'
-      + '<span class="fc-tag">Você</span>';
+    c.innerHTML = '<svg viewBox="0 0 24 24"><path d="M3.5 2.8 20.5 9.3 12.6 12 9.6 20Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>'
+      + '<span class="fc-tag"><span class="t1">Você</span><span class="t2">Clicar ↗</span></span>';
     document.body.appendChild(c);
     document.documentElement.classList.add('has-fc');
     var SEL = 'a,button,[role="button"],label,summary,select,.shot,.copy,input[type="submit"],input[type="button"]';
